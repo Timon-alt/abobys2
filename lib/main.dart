@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:abobys/features/crypto_list/crypto_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -39,68 +42,58 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        '/' :(context) => MainPage(),
+        '/' :(context) => CryptoListScreen(),
         '/coin': (context) => CoinScreen()
       },
     );
   }
 }
 
-class MainPage extends StatefulWidget {
-  const MainPage({super.key, });
 
-  @override
-  State<MainPage> createState() => _MainPageState();
-}
 
-class _MainPageState extends State<MainPage> {
-
-  @override
-  Widget build(BuildContext context) {
-  
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Crypto List'),
-      ),
-      // Абоба
-      body: ListView.separated(
-        itemCount: 10,
-        separatorBuilder: (context, index) => Divider(),
-        itemBuilder: (context, i) {
-          final coinName = 'Bitcoin';
-          return ListTile(
-          leading: SvgPicture.asset(
-            'assets/svg/bitcoin-logo.svg', 
-            width: 30, 
-            height: 30,),
-          title: Text(
-            coinName, 
-            style: Theme.of(context).textTheme.bodyMedium,),
-          subtitle: Text(
-            "200000\$",
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-          trailing: Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              '/coin',
-              arguments: coinName 
-            );
-          },
-        );
-        }
-      ),
-    );
-  }
-}
-
-class CoinScreen extends StatelessWidget {
+class CoinScreen extends StatefulWidget {
   const CoinScreen({super.key});
 
   @override
+  State<CoinScreen> createState() => _CoinScreenState();
+}
+
+class _CoinScreenState extends State<CoinScreen> {
+
+  String? coinName;
+
+  @override
+  void didChangeDependencies() {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    assert(args != null && args is String, 'You must provide String args!');
+    if (args == null)
+    {
+      log('You must provide args!');
+      return;
+    }
+
+    if (args is! String)
+    {
+      log('You must provide String args!');
+      return;
+    }
+    super.didChangeDependencies();
+    coinName = args;
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Bitcoin")),
+      appBar: AppBar(
+        title: Text(coinName ?? '...'),
+        leading: IconButton(
+          icon:Icon(Icons.arrow_back_ios, color: Colors.white,),
+          onPressed: () {
+            Navigator.of(context).pushNamed(
+              '/',
+            );
+
+          },)
+      ),
     );
   }
 }
