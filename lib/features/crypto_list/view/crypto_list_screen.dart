@@ -1,5 +1,7 @@
+import 'package:abobys/features/crypto_list/widgets/crypto_coin_tile.dart';
+import 'package:abobys/repositories/crypto_coins/crypto_coins_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 
 class CryptoListScreen extends StatefulWidget {
   const CryptoListScreen({super.key, });
@@ -9,6 +11,8 @@ class CryptoListScreen extends StatefulWidget {
 }
 
 class _CryptoListScreenState extends State<CryptoListScreen> {
+
+  var cryptoCoinsRepository = CryptoCoinsRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +26,16 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
         itemCount: 10,
         separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, i) {
-          final coinName = 'Bitcoin';
-          return ListTile(
-          leading: SvgPicture.asset(
-            'assets/svg/bitcoin-logo.svg', 
-            width: 30, 
-            height: 30,),
-          title: Text(
-            coinName, 
-            style: Theme.of(context).textTheme.bodyMedium,),
-          subtitle: Text(
-            "200000\$",
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-          trailing: Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            Navigator.of(context).pushNamed(
-              '/coin',
-              arguments: coinName 
-            );
-          },
-        );
+          const coinName = 'Bitcoin';
+          return const CryptoCoinTile(coinName: coinName);
         }
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.download),
+        onPressed: () {
+          cryptoCoinsRepository.getCoinsList();
+        },),
     );
   }
 }
+
