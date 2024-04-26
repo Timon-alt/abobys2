@@ -8,6 +8,7 @@ final darkTheme = ThemeData(
         dividerColor: Colors.white24,
         listTileTheme: const ListTileThemeData(iconColor: Colors.white),
         appBarTheme: AppBarTheme(
+          elevation: 0,
           backgroundColor: Color.fromARGB(255, 31, 31, 31),
           titleTextStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700),
           centerTitle: true,

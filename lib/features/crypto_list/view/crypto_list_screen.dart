@@ -1,5 +1,6 @@
 import 'package:abobys/features/crypto_list/widgets/crypto_coin_tile.dart';
 import 'package:abobys/repositories/crypto_coins/crypto_coins_repository.dart';
+import 'package:abobys/repositories/crypto_coins/models/crypto_coin.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,6 +14,13 @@ class CryptoListScreen extends StatefulWidget {
 class _CryptoListScreenState extends State<CryptoListScreen> {
 
   var cryptoCoinsRepository = CryptoCoinsRepository();
+  List<CryptoCoin>? _cryptoCoinList;
+
+  @override
+  void initState() {
+    _loadCryptoCoins();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +30,23 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
         title: Text('Crypto List'),
       ),
       // Абоба
-      body: ListView.separated(
-        itemCount: 10,
+      body: (_cryptoCoinList == null) 
+      ? const Center(child: CircularProgressIndicator(),) 
+      : ListView.separated(
+        padding: EdgeInsets.only(top: 16),
+        itemCount: _cryptoCoinList!.length,
         separatorBuilder: (context, index) => Divider(),
         itemBuilder: (context, i) {
-          const coinName = 'Bitcoin';
-          return const CryptoCoinTile(coinName: coinName);
+          final coin = _cryptoCoinList![i];
+          return CryptoCoinTile(coin: coin);
         }
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.download),
-        onPressed: () {
-          cryptoCoinsRepository.getCoinsList();
-        },),
     );
+  }
+
+  Future<void> _loadCryptoCoins() async {
+    _cryptoCoinList = await CryptoCoinsRepository().getCoinsList();
+    setState(() {});
   }
 }
 
