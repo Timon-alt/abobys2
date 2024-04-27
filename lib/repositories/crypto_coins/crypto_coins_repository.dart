@@ -5,6 +5,10 @@ import 'package:dio/dio.dart';
 
 // Нихуя не понял, тут надо гуглить и читать xdd
 class CryptoCoinsRepository implements AbstractCoinsRepository {
+
+
+  CryptoCoinsRepository({required this.dio});
+  final Dio dio;
   
   @override
   Future<List<CryptoCoin>> getCoinsList() async {
